@@ -1,8 +1,8 @@
 {
-  "name": "enssats3nodejs",
+  "name": "enssatS3NodeJS",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "start.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,17 +10,18 @@
     "type": "git",
     "url": "git+https://github.com/nicolasayala/enssatS3NodeJS.git"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/nicolasayala/enssatS3NodeJS/issues"
   },
   "homepage": "https://github.com/nicolasayala/enssatS3NodeJS#readme",
-  "devDependencies": {
-    "jsdoc": "^3.5.5"
-  },
   "dependencies": {
     "express": "^4.16.4",
     "mongodb": "^3.1.13"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.5.5"
   }
 }
