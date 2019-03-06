@@ -1,6 +1,8 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
+console.log(process.env.DATABASE);
+
 mongoose.connect(process.env.DATABASE, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 mongoose.connection
@@ -10,9 +12,10 @@ mongoose.connection
     .on('error', (err) => {
       console.log(`Connection error: ${err.message}`);
     });
++
 
 const app = require('./app');
 
-const server = app.listen(3000, () => {
+const server = app.listen(3001, () => {
   console.log(`Express is running on port ${server.address().port}`);
 });
