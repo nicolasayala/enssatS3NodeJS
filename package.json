@@ -20,7 +20,8 @@
   "homepage": "https://github.com/nicolasayala/enssatS3NodeJS#readme",
   "dependencies": {
     "express": "^4.16.4",
-    "mongodb": "^3.1.13"
+    "mongodb": "^3.1.13",
+    "pug": "^2.0.3"
   },
   "devDependencies": {
     "jsdoc": "^3.5.5",
