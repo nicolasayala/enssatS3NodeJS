@@ -3,35 +3,40 @@ extends layout
 block content
     h1 Sign in
 
-    -data = data || {}
-
     if errors
-        ul.my-errors
-            for error in errors
-                li= error.msg
+        div(class="card text-white bg-danger mb-3")
+            div(class="card-body")
+                ul.my-errors
+                    for error in errors
+                        li= error.msg
 
-    form(action="" method="POST" class="form-registration")
-        label(for="email") Email :
-        input(
-            type="text"
-            id="email"
-            name="email"
-            class="form-control"
-            value=data.email
-        )
+    div(class="card")
+        div(class="card-body")
 
-        label(for="password") Password :
-        input(
-            type="passwordCreate an account"
-            id="password"
-            name="password"
-            class="form-control"
-        )
+            -data = data || {}
 
-        input(
-            type="submit"
-            value="Sign in"
-            class="btn btn-lg btn-primary btn-block"
-        )
-    div(class="panel panel-default")
-        a(href="./register") Sign up
+            form(action="" method="POST")
+                label(for="email") Email :
+                input(
+                    type="text"
+                    id="email"
+                    name="email"
+                    class="form-control"
+                    value=data.email
+                )
+
+                label(for="password") Password :
+                input(
+                    type="passwordCreate an account"
+                    id="password"
+                    name="password"
+                    class="form-control"
+                )
+
+                input(
+                    type="submit"
+                    value="Sign in"
+                    class="btn btn-lg btn-primary btn-block"
+                )
+
+            a(href="./register" class="text-primary") Sign up

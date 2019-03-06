@@ -16,12 +16,12 @@ router.post('/',
         .isLength({
             min: 1
         })
-        .withMessage('Please enter an email'),
+        .withMessage('Please enter an email.'),
         body('password')
         .isLength({
             min: 1
         })
-        .withMessage('Please enter a password'),
+        .withMessage('Please enter a password.'),
     ],
     (req, res) => {
         const errors = validationResult(req);

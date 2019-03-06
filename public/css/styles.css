@@ -9,23 +9,23 @@ body {
 }
 
 /* css for registration form and errors*/
-.form-registration {
+.card {
     max-width: 330px;
     padding: 15px;
     margin: 0 auto;
 }
 
-.form-registration {
+.card {
     display: flex;
     flex-wrap: wrap;
 }
 
-.form-registration input {
+.card input {
     width: 100%;
     margin: 0px 0 10px;
 }
 
-.form-registration .btn {
+.card .btn {
     flex: 1 0 100%;
 }
 
@@ -34,18 +34,12 @@ body {
     padding: 0;
     list-style: none;
     color: #333;
-    font-size: 1.2rem;
+    font-size: 0.90rem;
     display: table;
 }
 
 .my-errors li {
-    margin: 0 0 1rem;
-}
-
-.my-errors li:before {
-    content: "! Error : ";
-    color: #f00;
-    font-weight: bold;
+    color: #731111;
 }
 
 /* Styles for listing table */
