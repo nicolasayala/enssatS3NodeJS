@@ -1,6 +1,7 @@
 const express = require('express');
 const {body,validationResult} = require('express-validator/check');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const User = mongoose.model('User');
 const router = express.Router();
 
@@ -31,10 +32,13 @@ router.post('/',
             }, function(err, user) {
                 if (!user) {
                     const user = new User(req.body);
-                    console.log("User " + user + " registered.");
-                    user.save()
-                        .then(() => {res.redirect('./');})
-                        .catch(() => {res.send('Sorry! Something went wrong.');});
+                    bcrypt.hash(user.password, 10, function(err, hash) {
+                        user.password = hash;
+                        console.log("User " + user + " registered.");
+                        user.save()
+                            .then(() => {res.redirect('./');})
+                            .catch(() => {res.send('Sorry! Something went wrong.');});
+                    });
                 } else {
                     res.render('register', {
                         title: "Register",

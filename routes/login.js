@@ -1,6 +1,7 @@
 const express = require('express');
 const {body,validationResult} = require('express-validator/check');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const User = mongoose.model('User');
 const router = express.Router();
 
@@ -36,18 +37,20 @@ router.post('/',
                         data: req.body,
                     });
                 } else {
-                    if (req.body.password === user.password) {
-                        console.log("User " + user + " logged in.");
-                        // sets a cookie with the user's info
-                        // req.session.user = user;
-                        res.redirect('./users');
-                    } else {
-                        res.render('login', {
-                            title: 'Login',
-                            errors: [{msg: 'Invalid email or password.'}],
-                            data: req.body,
-                        });
-                    }
+                    bcrypt.compare(req.body.password, user.password, function(err, valid) {
+                        if (valid) {
+                            console.log("User " + user + " logged in.");
+                            // sets a cookie with the user's info
+                            // req.session.user = user;
+                            res.redirect('./users');
+                        } else {
+                            res.render('login', {
+                                title: 'Login',
+                                errors: [{msg: 'Invalid email or password.'}],
+                                data: req.body,
+                            });
+                        }
+                    });
                 }
             });
         } else {
