@@ -4,6 +4,7 @@ const path = require('path');
 const users = require('./routes/users');
 const login = require('./routes/login');
 const register = require('./routes/register');
+const games = require('./routes/games');
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', login);
 app.use('/users', users);
 app.use('/register', register);
+app.use('/games', games);
 
 app.use(express.static('public'));
 

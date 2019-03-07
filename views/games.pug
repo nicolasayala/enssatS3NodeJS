@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1 Games
+    if games.length
+        div.col-md-12
+            each game in games
+                div.col-md-3
+                    img(src=game.image)
+                    = game.name
+    else
+        p No games yet
