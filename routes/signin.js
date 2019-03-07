@@ -1,38 +1,29 @@
 const express = require('express');
-const {body,validationResult} = require('express-validator/check');
 const mongoose = require('mongoose');
+const sessionChecker = require('../utils/session-checker');
 const bcrypt = require('bcrypt');
 const User = mongoose.model('User');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.render('login', {
-        title: "Login"
+router.get('/', sessionChecker.filterLoggedIn, (req, res) => {
+    res.render('signin', {
+        title: "Sign in"
     });
 });
 
-router.post('/',
-    [
-        body('email')
-        .isLength({
-            min: 1
-        })
-        .withMessage('Please enter an email.'),
-        body('password')
-        .isLength({
-            min: 1
-        })
-        .withMessage('Please enter a password.'),
-    ],
-    (req, res) => {
-        const errors = validationResult(req);
-        if (errors.isEmpty()) {
+router.post('/', (req, res) => {
+        req.checkBody('email', 'Email is required.').notEmpty();
+        req.checkBody('email', 'Please enter a valid email.').isEmail();
+        req.checkBody('password', 'Password is required.').notEmpty();
+
+        const errors = req.validationErrors();
+        if (!errors) {
             User.findOne({
                 email: req.body.email
             }, function(err, user) {
                 if (!user) {
-                    res.render('login', {
-                        title: 'Login',
+                    res.render('signin', {
+                        title: 'Sign in',
                         errors: [{msg: 'Invalid email or password.'}],
                         data: req.body,
                     });
@@ -41,11 +32,11 @@ router.post('/',
                         if (valid) {
                             console.log("User " + user + " logged in.");
                             // sets a cookie with the user's info
-                            // req.session.user = user;
+                            req.session.user = user;
                             res.redirect('./users');
                         } else {
-                            res.render('login', {
-                                title: 'Login',
+                            res.render('signin', {
+                                title: 'Sign in',
                                 errors: [{msg: 'Invalid email or password.'}],
                                 data: req.body,
                             });
@@ -54,9 +45,9 @@ router.post('/',
                 }
             });
         } else {
-            res.render('login', {
-                title: 'Login',
-                errors: errors.array(),
+            res.render('signin', {
+                title: 'Sign in',
+                errors: errors,
                 data: req.body,
             });
         }

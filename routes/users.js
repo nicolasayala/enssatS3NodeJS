@@ -1,10 +1,10 @@
 const express = require('express');
-const {body,validationResult} = require('express-validator/check');
+const sessionChecker = require('../utils/session-checker');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', sessionChecker.filterLoggedOut, (req, res) => {
   User.find()
     .then((users) => {
       res.render('index', { title: 'Listing users', users });
