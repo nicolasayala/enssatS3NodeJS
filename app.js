@@ -11,6 +11,7 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+
 // initialize body-parser to parse incoming parameters requests to req.body
 app.use(bodyParser.urlencoded({ extended: true }));
 // initialize cookie-parser to allow us access the cookies stored in the browser.
@@ -31,7 +32,7 @@ app.use(session({
 
 const routes = ["users", "signin", "signup", "logout", "games"]
 for(route of routes) {
-    app.use('/games', require("./routes/" + route));
+    app.use("/"+route, require("./routes/" + route));
 }
 
 app.use(express.static('public'));

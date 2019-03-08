@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/', sessionChecker.filterLoggedOut, (req, res) => {
     Game.find()
         .then((games) => {
-            res.render('index', { title: 'Listing games', games: games });
+            res.render('games', { title: 'Listing games', games: games });
         })
         .catch(() => { res.send('Sorry! Something went wrong.'); });
 });
