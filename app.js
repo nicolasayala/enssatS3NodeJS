@@ -5,11 +5,6 @@ const expressValidator = require('express-validator');
 const sessionChecker = require('./utils/session-checker');
 const session = require('express-session');
 const path = require('path');
-const users = require('./routes/users');
-const signin = require('./routes/signin');
-const signup = require('./routes/signup');
-const logout = require('./routes/logout');
-const games = require('./routes/games');
 
 const app = express();
 
@@ -34,11 +29,10 @@ app.use(session({
     }
 }));
 
-app.use('/users', users);
-app.use('/signin', signin);
-app.use('/signup', signup);
-app.use('/logout', logout);
-app.use('/games', games);
+const routes = ["users", "signin", "signup", "logout", "games"]
+for(route of routes) {
+    app.use('/games', require("./routes/" + route));
+}
 
 app.use(express.static('public'));
 
