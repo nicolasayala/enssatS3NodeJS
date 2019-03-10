@@ -3,12 +3,12 @@ extends layout
 block content
     h1 Games
     if games.length
-        div.col-md-12
+        div.col-md-12.row
             each game in games
                 div.col-md-3.game
-                    div
-                        a(href="/game/"+game.name)
+                    a(href="/game/"+game.name+"/index.html")
+                        div
                             img(src="/images/"+game.image)
-                            = game.name
+                        = game.name
     else
         p No games yet
