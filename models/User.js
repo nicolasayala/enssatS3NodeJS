@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const ObjectID = mongoose.Types.ObjectId;
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -9,6 +10,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  highscores: [{
+    game: ObjectID,
+    highscore: Number,
+  }],
 });
 
 module.exports = mongoose.model('User', userSchema);

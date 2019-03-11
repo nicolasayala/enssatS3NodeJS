@@ -1,14 +1,11 @@
 const mongoose = require('mongoose');
 
 const gameSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        trim: true,
-    },
-    image: { //image uri source
-        type: String,
-        trim: true,
-    },
+    name: String,
+    image: String,
+    description: String,
+    author: String,
+    highscore: Number,
 });
 
 module.exports = mongoose.model('Game', gameSchema);
