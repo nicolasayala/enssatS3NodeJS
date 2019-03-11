@@ -2,7 +2,7 @@
 
 // Only calls next if the user is logged-in
 exports.filterLoggedOut = (req, res, next) => {
-    if (req.cookies.user_sid) { //req.session.user
+    if (req.cookies.user_sid && req.session.user) { //req.session.user
         next();
     } else {
         res.redirect('/signin');
@@ -11,7 +11,7 @@ exports.filterLoggedOut = (req, res, next) => {
 
 // Only calls next if the user is logged-out
 exports.filterLoggedIn = (req, res, next) => {
-    if (req.cookies.user_sid) { //req.session.user
+    if (req.cookies.user_sid && req.session.user) { //req.session.user
         res.redirect('/');
     } else {
         next();

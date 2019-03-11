@@ -27,7 +27,7 @@ router.post('/', (req, res) => {
                     user.password = hash;
                     console.log("User " + user + " registered.");
                     user.save()
-                        .then(() => {res.redirect('./');})
+                        .then(() => {res.redirect('/');})
                         .catch(() => {res.send('Sorry! Something went wrong.');});
                 });
             } else {

@@ -47,8 +47,8 @@ app.use((req, res, next) => {
 });
 
 // route for Home-Page
-app.get('/', sessionChecker.filterLoggedIn, (req, res) => {
-    res.redirect('/signin');
+app.get('/', sessionChecker.filterLoggedOut, (req, res) => {
+    res.redirect('/games');
 });
 
 module.exports = app;

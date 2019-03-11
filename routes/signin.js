@@ -33,7 +33,7 @@ router.post('/', (req, res) => {
                             console.log("User " + user + " logged in.");
                             // sets a cookie with the user's info
                             req.session.user = user;
-                            res.redirect('./users');
+                            res.redirect('/');
                         } else {
                             res.render('signin', {
                                 title: 'Sign in',
