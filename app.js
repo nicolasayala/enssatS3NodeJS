@@ -30,7 +30,7 @@ app.use(session({
     }
 }));
 
-const routes = ["users", "signin", "signup", "logout", "games"]
+const routes = ["users", "signin", "signup", "logout", "games"];
 for(route of routes) {
     app.use("/"+route, require("./routes/" + route));
 }
