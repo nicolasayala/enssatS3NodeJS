@@ -30,6 +30,14 @@ router.post('/', (req, res) => {
                 } else {
                     bcrypt.compare(req.body.password, user.password, function(err, valid) {
                         if (valid) {
+                            if (user.isBanned) {
+                                res.render('signin', {
+                                    title: 'Sign in',
+                                    errors: [{msg: 'Your account has been banned.'}],
+                                    data: req.body,
+                                });
+                                return;
+                            }
                             console.log("User " + user + " logged in.");
                             // sets a cookie with the user's info
                             req.session.user = user;

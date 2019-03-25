@@ -23,6 +23,8 @@ router.post('/', (req, res) => {
         }, function(err, user) {
             if (!user) {
                 const user = new User(req.body);
+                user.isAdmin = false
+                user.isBanned = false
                 bcrypt.hash(user.password, 10, function(err, hash) {
                     user.password = hash;
                     console.log("User " + user + " registered.");

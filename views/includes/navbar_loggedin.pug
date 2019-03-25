@@ -4,4 +4,6 @@ nav(class="navbar navbar-expand-lg navbar-dark bg-dark mb-3")
     div(class="collapse navbar-collapse" id="navbarNavAltMarkup")
         div(class="navbar-nav")
             a(class="nav-item nav-link active" href="/") Home
+            if (admin)
+                a(class="nav-item nav-link active" href="/users") Users
     a(class="btn btn-danger" href="/logout") Logout

@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  isAdmin: Boolean,
+  isBanned: Boolean,
   highscores: [{
     game: ObjectID,
     highscore: Number,

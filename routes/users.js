@@ -4,10 +4,10 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const router = express.Router();
 
-router.get('/', sessionChecker.filterLoggedOut, (req, res) => {
+router.get('/', sessionChecker.filterUser, (req, res) => {
   User.find()
     .then((users) => {
-      res.render('index', { title: 'Listing users', users });
+      res.render('users', { title: 'Listing users', users, admin:true });
     })
     .catch(() => { res.send('Sorry! Something went wrong.'); });
 });

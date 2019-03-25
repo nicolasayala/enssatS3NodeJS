@@ -7,10 +7,12 @@ const router = express.Router();
 router.get('/', sessionChecker.filterLoggedOut, (req, res) => {
     Game.find()
         .then((games) => {
-            res.render('games', { title: 'Listing games', games: games });
+            res.render('games',
+            { title: 'Listing games', games: games, admin: req.session.user.isAdmin });
         })
         .catch(() => { res.send('Sorry! Something went wrong.'); });
 });
+
 router.get('/scores', sessionChecker.filterLoggedOut, (req, res) => {
       if(req.params.game) {
         Game.findOne({
