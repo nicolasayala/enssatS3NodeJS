@@ -21,7 +21,7 @@ router.get('/scores', sessionChecker.filterLoggedOut, (req, res) => {
         res.redirect("/games");
     }
     Game.findOne({name: req.query.game})
-        .populate([{path:"highscores", select:"user value"},{path:"highscores.user", select:"email"}])
+        .populate([{path:"highscores", select:"user value"},{path:"highscores", populate:{path:"user", select:"isBanned isAdmin email"}}])
         .then((game) => {
             console.log(JSON.stringify(game));
             if(game)
