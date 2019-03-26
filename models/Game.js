@@ -6,6 +6,10 @@ const gameSchema = new mongoose.Schema({
     description: String,
     author: String,
     highscore: Number,
+    highscores: [{
+        user: String,
+        highscore: Number,
+    }],
 });
 
 module.exports = mongoose.model('Game', gameSchema);
