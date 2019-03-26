@@ -3,6 +3,7 @@ const sessionChecker = require('../utils/session-checker');
 const mongoose = require('mongoose');
 const Game = mongoose.model('Game');
 const User = mongoose.model('User');
+const Highscore = mongoose.model('Highscore');
 const router = express.Router();
 
 router.get('/', sessionChecker.filterLoggedOut, (req, res) => {
@@ -20,7 +21,9 @@ router.get('/scores', sessionChecker.filterLoggedOut, (req, res) => {
         res.redirect("/games");
     }
     Game.findOne({name: req.query.game})
+        .populate([{path:"highscores", select:"user value"},{path:"highscores.user", select:"email"}])
         .then((game) => {
+            console.log(JSON.stringify(game));
             if(game)
                 res.render('scores', {title: 'Tableau des scores ', game: game});
             else
@@ -31,41 +34,60 @@ router.get('/scores', sessionChecker.filterLoggedOut, (req, res) => {
         });
 });
 
-router.post('/scores', sessionChecker.filterLoggedOut, (req, res) => {
+router.post('/scores'/*, sessionChecker.filterLoggedOut*/, (req, res) => {
     console.log("req body ->", req.body);
+    console.log("req query ->", req.query);
     if (!(req.body.hasOwnProperty("new_score") && req.query.hasOwnProperty("game"))) {
-        res.sendStatus(201);
+        res.sendStatus(222);
         return;
     }
-    let user = req.session.user;
-    User.findOne({email:req.session.user.email})
-        .then((user)=>{
-            update_highscore(user, req.query.game, req.body.new_score);
-            req.session.user=user;
-            res.sendStatus(200);
+    Game.findOne({name:req.query.game}, (err, game)=>{
+        if(err){
+            console.log(err);
+            return;
+        }
+            User.findOne({email: "l@l.fr"})//req.session.user.email})
+                .then((user)=>{
+                    if(!game){
+                        res.send('Game "' + req.query.game + '" not found');
+                    }else if(!user){
+                        res.send('user not found');
+                    }else{
+                        update_highscore(game, user, req.body.new_score);
+                        res.sendStatus(201);
+                    }
+                    req.session.user=user;
+                })
+                .catch(() => {
+                    res.send('Sorry! Something went wrong. user');
+                });
         })
-        .catch(() => {
-            res.send('Sorry! Something went wrong.');
-        });
+        // .catch(() => {
+        //     res.send('Sorry! Something went wrong. game');
+        // });
 });
 
-function update_highscore(user, game, new_score) {
-    let hs = null;
-    for (hs of user.highscores) {
-        if (hs.game == game) {
-            break;
-        }
-    }
-    if (hs == null) {
-        hs = {game: game, highscore: 0};
-        user.highscores.push(hs);
-        console.log("should have new score");
-    }
-    if (hs.highscore < parseInt(new_score)) {
-        hs.highscore = parseInt(new_score);
-        console.log("new highscore ", new_score, user.email);
-        user.save();
-    }
+function update_highscore(game, user, new_score) {
+    Highscore.findOne({game:game._id, user:user._id})
+        .then((hs)=> {
+            if (hs == null) {
+                hs = new Highscore({game: game._id, user:user._id, value: 0});
+                hs.save();//needed to generate the _id ?? todo check _id generation
+                user.highscores.push(hs._id);
+                user.save();
+                game.highscores.push(hs._id);
+                game.save();
+                console.log("should have new score ", hs._id);
+            }
+            if (hs.value < parseInt(new_score)) {
+                hs.value = parseInt(new_score);
+                console.log("new highscore ", new_score, user.email);
+                hs.save();
+            }
+        })
+        .catch(() => {
+            console.log("error when updating highscore")
+        });
 }
 
 module.exports = router;

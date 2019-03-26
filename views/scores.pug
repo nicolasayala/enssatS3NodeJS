@@ -3,18 +3,22 @@ extends layout
 block content
     h1= title
     if game
-        = game.name
-        //div(class="card-deck")
-        //    each game in games
-        //        div(class="card text-white bg-dark mb-3" style="padding:0")
-        //            h3(class="card-header text-center")= game.name
-        //            div(class="card-body")
-        //                img(class="card-img mb-3" src="/images/"+game.image)
-        //                p(class="card-text") #{game.description}
-        //                p(class="card-text") current highscore : #{game.highscore}
-        //            a(class="btn btn-lg btn-primary btn-block" href="/game/"+game.name) Play !
-        //            div(class="card-footer")
-        //                p(class="card-text")
-        //                    small(class="text-muted") Created by #{game.author}
+        h2= game.name
+        table(class="table table-striped table-bordered table-hover table-sm")
+            thead(class="thead-dark")
+                tr
+                    th(scope="col") Email
+                    th(scope="col") Highscore
+            tbody
+                each hs in game.highscores
+                    -color = ''
+                    if hs.user.isBanned
+                        -color = 'table-danger'
+                    else if hs.user.isAdmin
+                        -color = 'table-primary'
+                    tr(class=color)
+                        td= hs.user.email
+                        td= hs.value
+
     else
         p oups

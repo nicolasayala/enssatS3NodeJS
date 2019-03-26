@@ -2,6 +2,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 require('./models/User');
 require('./models/Game');
+require('./models/Highscore');
 const app = require('./app');
 
 mongoose.connect(process.env.DATABASE, {useNewUrlParser: true});
