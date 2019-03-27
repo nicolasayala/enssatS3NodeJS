@@ -23,9 +23,11 @@ block content
                         td= user.email
                         td
                             form(action="" method="POST")
-                                input(type="checkbox" id=user.email name=user.email class="form-control" checked=user.isAdmin onChange="this.form.submit()")
+                                input(type="hidden" name="id" value=user._id)
+                                input(type="checkbox" name="admin" class="form-control" checked=user.isAdmin onChange="this.form.submit()")
                         td
                             form(action="" method="POST")
-                                input(type="checkbox" id=user.email name=user.email class="form-control" checked=user.isBanned onChange="this.form.submit()")
+                                input(type="hidden" name="id" value=user._id)
+                                input(type="checkbox" name="banned" class="form-control" checked=user.isBanned onChange="this.form.submit()")
     else
         p No users yet
