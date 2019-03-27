@@ -15,6 +15,7 @@ block content
                         p(class="card-text") #{game.description}
                         p(class="card-text") current highscore : #{game.highscore}
                         a(class="btn btn-lg btn-primary btn-block" href="/game/"+game.name) Play !
+                        a(class="btn btn-lg btn-secondary btn-block" href="/games/scores?game="+game.name) Scores
                     div(class="card-footer")
                         p(class="card-text")
                             small(class="text-muted") Created by #{game.author}
