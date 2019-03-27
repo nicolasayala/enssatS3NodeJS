@@ -108,8 +108,10 @@ function updateGame() {
         removeCompleteLines(squares);
         fallingPiece = randomFallingPiece();
         if(fallingPiece.collide(squares)){
-            alert("GAME OVER\nscore : "+score);
-            location.reload();
+            let url = "/games/scores?game=Tetris Continuum";
+            post(url, {new_score:score});
+            alert("GAME OVER\nscore:"+score);
+            location.replace(url);
         }
     }
 
