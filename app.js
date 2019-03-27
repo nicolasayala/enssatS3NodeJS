@@ -14,6 +14,7 @@ app.set('view engine', 'pug');
 
 // initialize body-parser to parse incoming parameters requests to req.body
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 // initialize cookie-parser to allow us access the cookies stored in the browser.
 app.use(cookierParser());
 // initialize expressValidator to parse input errors
