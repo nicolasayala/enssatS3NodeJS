@@ -56,9 +56,10 @@ router.post('/scores', sessionChecker.filterLoggedOut, (req, res) => {
                         res.send('user not found');
                         console.log('user not found')
                     }else{
-                        update_highscore(game, user, req.body.new_score);
-                        console.log('score updated');
-                        res.sendStatus(201);
+                        update_highscore(game, user, req.body.new_score, ()=>{
+                            console.log('score updated');
+                            res.sendStatus(201);
+                        })
                     }
                     req.session.user=user;
                 })
@@ -71,7 +72,7 @@ router.post('/scores', sessionChecker.filterLoggedOut, (req, res) => {
         // });
 });
 
-function update_highscore(game, user, new_score) {
+function update_highscore(game, user, new_score, callback) {
     Highscore.findOne({game:game._id, user:user._id})
         .then((hs)=> {
             if (hs == null) {

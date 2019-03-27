@@ -7,6 +7,7 @@ block content
     h1= title
     if game
         h2= game.name
+        -game.highscores.sort((hs1, hs2)=>hs2.value - hs1.value)
         a(class="btn btn-sm btn-primary btn-block col-1" href="/game/"+game.name) Retry
         table(class="table table-striped table-bordered table-hover table-sm")
             thead(class="thead-dark")
