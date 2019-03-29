@@ -104,9 +104,9 @@ function update_highscore(game, user, new_score, callback) {
                 console.log("should have new score ", hs._id);
             }
             if (hs.value <= parseInt(new_score)) {
-                hs.value = parseInt(new_score);
-                console.log("new highscore ", new_score, user.email);
-                hs.save();
+              hs.value = parseInt(new_score);
+              console.log("new highscore ", new_score, user.email);
+              hs.save();
             }
             callback();
         })
