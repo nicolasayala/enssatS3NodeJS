@@ -9,8 +9,22 @@ const router = express.Router();
 router.get('/', sessionChecker.filterLoggedOut, (req, res) => {
     Game.find()
         .then((games) => {
-            res.render('games',
-            { title: 'Listing games', games: games, admin: req.session.user.isAdmin });
+            User.findOne({email:req.session.user.email})
+                .populate([{path:"highscores", select:"game value"},{path:"highscores", populate:{path:"game", select:"name"}}])
+                .then((user)=>{
+                    if(user==null) {
+                        res.send('Sorry! Something went wrong. (login)');
+                        return;
+                    }
+                    let personalHighscores={};
+                    console.log(user);
+                    for(let hs of user.highscores){
+                        personalHighscores[hs.game.name]=hs.value;
+                    }
+                    console.log("personnalHighscore : ", personalHighscores);
+                    res.render('games',
+                        { title: 'Listing games', games: games, admin: req.session.user.isAdmin, personalHighscores });
+                });
         })
         .catch(() => { res.send('Sorry! Something went wrong.'); });
 });
@@ -73,6 +87,11 @@ router.post('/scores', sessionChecker.filterLoggedOut, (req, res) => {
 });
 
 function update_highscore(game, user, new_score, callback) {
+    console.log("highscore", game.highscore);
+    if(game.highscore<new_score){
+        game.highscore=new_score;
+        game.save();
+    }
     Highscore.findOne({game:game._id, user:user._id})
         .then((hs)=> {
             if (hs == null) {

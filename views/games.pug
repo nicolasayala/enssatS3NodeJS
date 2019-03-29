@@ -14,6 +14,8 @@ block content
                         img(class="card-img mb-3" src="/images/"+game.image)
                         p(class="card-text") #{game.description}
                         p(class="card-text") current highscore : #{game.highscore}
+                        if personalHighscores[game.name]
+                            p(class="card-text") personnal highscore : #{personalHighscores[game.name]}
                         a(class="btn btn-lg btn-primary btn-block" href="/game/"+game.name) Play !
                         a(class="btn btn-lg btn-secondary btn-block" href="/games/scores?game="+game.name) Scores
                     div(class="card-footer")
