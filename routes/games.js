@@ -40,9 +40,9 @@ router.get('/scores', sessionChecker.filterLoggedOut, (req, res) => {
         .then((game) => {
             console.log("gJSON", JSON.stringify(game));
             if(game)
-                res.render('scores', {title: 'Tableau des scores ', game: game});
+                res.render('scores', {title: 'Tableau des scores ', game: game, admin: req.session.user.isAdmin});
             else
-                res.render('scores', {title: 'Game "' + req.query.game + '" not found', game: null});
+                res.render('scores', {title: 'Game "' + req.query.game + '" not found', game: null, admin: req.session.user.isAdmin});
         })
         .catch(() => {
             res.send('Sorry! Something went wrong.');
