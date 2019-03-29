@@ -193,7 +193,7 @@ function removeCompleteLines(squares) {
 
     let nbLineRemoved=0;
     for(let i=0; i<squares.length; ){
-        if(squares[i].length === 7){
+        if(squares[i].length === NB_COL){
             squares.splice(i,1); //remove line
             nbLineRemoved++;
         }else i++

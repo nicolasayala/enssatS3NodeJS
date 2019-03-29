@@ -9,10 +9,11 @@ let tics = 0;
 
 //constantes
 const SQUARE_SIZE=35;
-const NB_LINE_MAX=24;
+const NB_LINE=24;
+const NB_COL=10;
 const CanWidth = 700;
 const CanHeight = 500;
-const GameWidth = 10*SQUARE_SIZE;
+const GameWidth = NB_COL*SQUARE_SIZE;
 const GameHeight = 500;
 
 //Canvas
@@ -121,7 +122,6 @@ function updateGame() {
 
         }
     }
-
 }
 
 function clearGame() {
@@ -197,7 +197,7 @@ function init() {
     fallingPiece = nextFallingPiece();
     score = 0;
     squares = [];
-    for(let i=0; i<NB_LINE_MAX; i++)
+    for(let i=0; i<NB_LINE; i++)
         squares.push([]);
 
 
