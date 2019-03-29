@@ -108,9 +108,11 @@ function update_highscore(game, user, new_score, callback) {
                 console.log("new highscore ", new_score, user.email);
                 hs.save();
             }
+            callback();
         })
         .catch(() => {
-            console.log("error when updating highscore")
+            console.log("error when updating highscore");
+            callback();
         });
 }
 
