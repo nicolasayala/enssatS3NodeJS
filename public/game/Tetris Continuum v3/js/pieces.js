@@ -30,13 +30,14 @@ function randomFallingPiece(){
     let p = new Piece(0,0, colors[num_piece],num_piece);
     return p;
 }
+
 function nextFallingPiece(){
     let p = nextFallingPieces[0];
     nextFallingPieces.splice(0,1);
     nextFallingPieces.push(randomFallingPiece());
     p.falling=true;
     p.pos.x=Math.ceil(Math.random()*(GameWidth-p.width));
-    p.pos.y=0;
+    p.pos.y=-p.pattern.height*SQUARE_SIZE;
     return p;
 }
 
@@ -71,8 +72,8 @@ class Piece{
                         return {
                             right   : r1x + SQUARE_SIZE - r2x,
                             left    : r1x - r2x - SQUARE_SIZE,
-                            bottom     : r1y + SQUARE_SIZE - r2y,
-                            top  : r1y - r2y - SQUARE_SIZE
+                            bottom  : r1y + SQUARE_SIZE - r2y,
+                            top     : r1y - r2y - SQUARE_SIZE
                         };
                     }
                 }
@@ -85,7 +86,8 @@ class Piece{
         let oP = this.pattern.pivot;
         this.pattern.rotate();
         let nP = this.pattern.pivot;
-        this.pos = {x:this.pos.x-nP.x+oP.x,y:this.pos.y-nP.y+oP.y}
+        this.pos.x = Math.round(this.pos.x-nP.x+oP.x);
+        this.pos.y = Math.round(this.pos.y-nP.y+oP.y);
     }
     rotateBack(){
         let oP = this.pattern.pivot;
