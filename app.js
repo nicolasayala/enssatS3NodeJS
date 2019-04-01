@@ -31,6 +31,7 @@ app.use(session({
     }
 }));
 
+// Routes setup
 const routes = ["users", "signin", "signup", "logout", "games"];
 for(route of routes) {
     app.use("/"+route, require("./routes/" + route));
