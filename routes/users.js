@@ -1,9 +1,6 @@
 /**
- * users.js
- *
- * Route /users
+ * @file
  * Displays user list for admins
- *
  */
 
 const express = require('express');

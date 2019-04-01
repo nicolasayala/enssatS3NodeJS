@@ -1,5 +1,5 @@
 /**
- * User.js
+ * @file
  * user's schema
  */
 

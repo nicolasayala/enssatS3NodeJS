@@ -1,5 +1,5 @@
 /**
- * Game.js
+ * @file
  * game's schema
  */
 

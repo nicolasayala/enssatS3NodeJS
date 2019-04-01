@@ -1,8 +1,6 @@
 /**
- * logout.js
- *
- * Handles users logout
- *
+ * @file
+ * Handles user logout
  */
 
 const express = require('express');

@@ -1,5 +1,5 @@
 /**
- * Highscore.js
+ * @file
  * highscore's schema
  */
 
