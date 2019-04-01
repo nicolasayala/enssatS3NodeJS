@@ -17,11 +17,11 @@ router.get('/', sessionChecker.filterLoggedOut, (req, res) => {
                         return;
                     }
                     let personalHighscores={};
-                    console.log(user);
+                    //console.log(user);
                     for(let hs of user.highscores){
                         personalHighscores[hs.game.name]=hs.value;
                     }
-                    console.log("personnalHighscore : ", personalHighscores);
+                    //console.log("personnalHighscore : ", personalHighscores);
                     res.render('games',
                         { title: 'Listing games', games: games, admin: req.session.user.isAdmin, personalHighscores });
                 });
@@ -65,10 +65,10 @@ router.post('/scores', sessionChecker.filterLoggedOut, (req, res) => {
                 .then((user)=>{
                     if(!game){
                         res.send('Game "' + req.query.game + '" not found');
-                        console.log('Game "' + req.query.game + '" not found');
+                        console.error('post : Game "' + req.query.game + '" not found');
                     }else if(!user){
                         res.send('user not found');
-                        console.log('user not found')
+                        console.error('post : user not found', req.session.user.email)
                     }else{
                         update_highscore(game, user, req.body.new_score, ()=>{
                             console.log('score updated');
@@ -96,7 +96,7 @@ function update_highscore(game, user, new_score, callback) {
         .then((hs)=> {
             if (hs == null) {
                 hs = new Highscore({game: game._id, user:user._id, value: 0});
-                hs.save();//needed to generate the _id ?? todo check _id generation
+                //hs.save();//needed to generate the _id ?? --no it's done on object creation
                 user.highscores.push(hs._id);
                 user.save();
                 game.highscores.push(hs._id);
@@ -108,10 +108,11 @@ function update_highscore(game, user, new_score, callback) {
               console.log("new highscore ", new_score, user.email);
               hs.save();
             }
+            //console.log(hs, game, user);
             callback();
         })
         .catch(() => {
-            console.log("error when updating highscore");
+            console.error("error when updating highscore");
             callback();
         });
 }

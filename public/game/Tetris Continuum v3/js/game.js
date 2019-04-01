@@ -10,7 +10,7 @@ let tics = 0;
 //constantes
 const SQUARE_SIZE=35;
 const NB_LINE=24;
-const NB_COL=10;
+const NB_COL=7;
 const CanWidth = 700;
 const CanHeight = 500;
 const GameWidth = NB_COL*SQUARE_SIZE;
@@ -19,7 +19,7 @@ const GameHeight = 500;
 //Canvas
 let divArena;
 let ctxArena;
-var gameover = false;
+var stopMainLoop = false;
 
 ///////////////////////////////////
 let speedBoost=9;
@@ -73,6 +73,14 @@ let squares;
 let fallingPiece;
 
 
+function gameover() {
+    let url = "/games/scores?game=Tetris Continuum v3";
+    post(url, {new_score: score});
+    // alert("GAME OVER\nscore:"+score);
+    stopMainLoop = true;
+    location.replace(url);
+}
+
 function updateGame() {
     "use strict";
 
@@ -106,21 +114,22 @@ function updateGame() {
     fallingPiece.moveAndCollide(dx,dy, squares);
 
     if(fallingPiece.falling === false){
+        //put all squares of the falling piece in the static "grid"
         let p=fallingPiece;
         for(let s of p.pattern.squares) {
             let finalS = new Square(p.pos.x+s.x*SQUARE_SIZE, p.pos.y+s.y*SQUARE_SIZE, p.color);
             squares[p.lineNumber-s.y].push(finalS);
         }
-        removeCompleteLines(squares);
-        fallingPiece = nextFallingPiece();
-        if(fallingPiece.collide(squares)){
-            let url = "/games/scores?game=Tetris Continuum v3";
-            post(url, {new_score:score});
-            // alert("GAME OVER\nscore:"+score);
-            gameover=true;
-            location.replace(url);
 
+        let nbLinesRm = removeCompleteLines(squares);
+        score += nbLinesRm*nbLinesRm;
+
+        if(fallingPiece.pos.y<0){
+            gameover();
         }
+
+        //new falling piece
+        fallingPiece = nextFallingPiece();
     }
 }
 
@@ -174,7 +183,7 @@ function mainloop () {
 function recursiveAnim () {
     "use strict";
     mainloop();
-    if(!gameover)
+    if(!stopMainLoop)
         animFrame( recursiveAnim );
 }
 
