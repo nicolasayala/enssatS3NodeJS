@@ -1,6 +1,11 @@
-// middleware functions to check for logged-in/logged-out users
+// middleware functions to check for logged-in/logged-out/admin users
 
-// Only calls next if the user is logged-in
+/**
+ * Only calls next when the user is logged-in, instead redirects to /signin.
+ * @param req - http req
+ * @param res - http res
+ * @param next - callback
+ **/
 exports.filterLoggedOut = (req, res, next) => {
     if (req.cookies.user_sid && req.session.user) {
         next();
@@ -9,7 +14,12 @@ exports.filterLoggedOut = (req, res, next) => {
     }
 };
 
-// Only calls next if the user is logged-out
+/**
+ * Only calls next when the user is logged-out, instead redirects to /.
+ * @param req - http req
+ * @param res - http res
+ * @param next - callback
+ **/
 exports.filterLoggedIn = (req, res, next) => {
     if (req.cookies.user_sid && req.session.user) {
         res.redirect('/');
@@ -18,7 +28,12 @@ exports.filterLoggedIn = (req, res, next) => {
     }
 };
 
-// Only calls next if the user has admin privilege
+/**
+ * Only calls next when the user is admin, instead redirects to /.
+ * @param req - http req
+ * @param res - http res
+ * @param next - callback
+ **/
 exports.filterUser = (req, res, next) => {
     if (req.cookies.user_sid && req.session.user && req.session.user.isAdmin) {
         next();
