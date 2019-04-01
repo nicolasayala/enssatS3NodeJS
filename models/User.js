@@ -1,10 +1,15 @@
+/**
+ * User.js
+ * user's schema
+ */
+
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
-    trim: true,
+    trim: true, // removes spacings before and after input
   },
   password: {
     type: String,

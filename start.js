@@ -5,6 +5,7 @@ require('./models/Game');
 require('./models/Highscore');
 const app = require('./app');
 
+// Connects to moongodb
 mongoose.connect(process.env.DATABASE, {useNewUrlParser: true});
 mongoose.Promise = global.Promise;
 mongoose.connection
@@ -15,6 +16,7 @@ mongoose.connection
         console.log(`Connection error: ${err.message}`);
     });
 
+// Open server on port 3000
 const server = app.listen(3000, () => {
   console.log(`Express is running on port ${server.address().port}`);
 });
