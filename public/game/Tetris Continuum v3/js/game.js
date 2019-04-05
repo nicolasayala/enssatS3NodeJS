@@ -40,7 +40,7 @@ let inputKeys = {
 
 let keyCooldown = {};
 for(let key in inputKeys)
-    keyCooldown[key]=0;
+    keyCooldown[inputKeys[key]]=-1;
 function keyDownHandler(event) {
     "use strict";
     let keyCode = event.keyCode;
