@@ -163,9 +163,10 @@ function drawGame() {
         }
     }
     //next Falling pieces
+    let offset = -Math.min(0, fallingPiece.center.y);
     for(let i in nextFallingPieces){
         nextFallingPieces[i].pos.x=GameWidth+10;
-        nextFallingPieces[i].pos.y=40+i*SQUARE_SIZE*2;
+        nextFallingPieces[i].pos.y=40+i*SQUARE_SIZE*2+offset;
         nextFallingPieces[i].draw(ctxArena);
     }
     ctxArena.fillStyle = "black";

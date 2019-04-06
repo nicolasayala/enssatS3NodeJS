@@ -93,7 +93,8 @@ class Piece{
         let oP = this.pattern.pivot;
         for(let i=0; i<3;i++) this.pattern.rotate();//rotate 3 times
         let nP = this.pattern.pivot;
-        this.pos = {x:this.pos.x-nP.x+oP.x,y:this.pos.y-nP.y+oP.y}
+        this.pos.x = Math.round(this.pos.x-nP.x+oP.x);
+        this.pos.y = Math.round(this.pos.y-nP.y+oP.y);
     }
     moveAndCollide(dx, dy, squares){
         this.pos.x+=dx;
@@ -124,6 +125,11 @@ class Piece{
     }
     get height(){
         return this.pattern.height*SQUARE_SIZE;
+    }
+    get center(){
+        let x=Math.floor(this.pos.x+this.width/2);
+        let y=Math.floor(this.pos.y+this.height/2);
+        return {x:x, y:y};
     }
     get lineNumber(){
         return Math.floor((GameHeight-this.pos.y)/SQUARE_SIZE)-1;
