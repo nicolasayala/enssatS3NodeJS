@@ -58,10 +58,10 @@ function disableAction(action){
 }
 
 function getActionForMouse(){
-    if(mouse.startPos===null || mouse.pos ===null) throw new Error("startPos or pos null");
+    if(mouse.startPos===null || mouse.pos ===null) return null;//throw new Error("startPos or pos null");
     let dx = mouse.pos.x - mouse.startPos.x;
     let dy = mouse.pos.y - mouse.startPos.y;
-    // if(dx*dx + dy*dy < 10) return null; //threshold for detecting movement
+    if(dx*dx + dy*dy < 20*20) return null; //threshold for detecting movement
     if(dx*dx>dy*dy){ //horizontal movement (square for absolute value)
         if(dx>0) return "RIGHT";
         else return "LEFT";
@@ -102,12 +102,15 @@ function touchStartHandler(event) {
 }
 function touchMoveHandler(event) {
     if(mouse.pressed===false) throw new Error("mouse pressed === false, when touchmove event triggered");
-    if(mouse.pos!==null)
-        disableAction(getActionForMouse());
+    let oldAction = getActionForMouse();
     let x=event.touches[0].pageX;
     let y=event.touches[0].pageY;
     mouse.pos={x:x, y:y};
-    enableAction(getActionForMouse());
+    let action = getActionForMouse();
+    if(action!==oldAction){
+		disableAction(oldAction);
+		enableAction(action);
+	}
 }
 function touchEndHandler(event) {
     disableAction(getActionForMouse());
