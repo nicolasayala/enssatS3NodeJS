@@ -45,12 +45,14 @@ let keyToAction = {
 };
 
 function enableAction(action){
+    console.log("enable action "+action);
     if(actionCooldown[action]!==undefined)
         if(actionCooldown[action]<0){
             actionCooldown[action] = 0;
         }
 }
 function disableAction(action){
+    console.log("disable action "+action);
     if(actionCooldown[action]!==undefined)
         actionCooldown[action] = -1;//TODO correction ability to spam (bypass cooldown)
 }
@@ -59,12 +61,12 @@ function getActionForMouse(){
     if(mouse.startPos===null || mouse.pos ===null) throw new Error("startPos or pos null");
     let dx = mouse.pos.x - mouse.startPos.x;
     let dy = mouse.pos.y - mouse.startPos.y;
-    if(dx + dy < 2) return null; //threshold for detecting movement
+    // if(dx*dx + dy*dy < 10) return null; //threshold for detecting movement
     if(dx*dx>dy*dy){ //horizontal movement (square for absolute value)
         if(dx>0) return "RIGHT";
         else return "LEFT";
     }else{ //vertical movement
-        if(dy>0) return "UP";
+        if(dy<0) return "UP";
         else return "DOWN";
     }
 }
@@ -78,7 +80,7 @@ function getActionForMouse(){
  */
 let actionCooldown = {};
 for(let key in keyToAction)
-    actionCooldown[actionCooldown[key]]=-1;
+    actionCooldown[keyToAction[key]]=-1;
 
 function keyDownHandler(event) {
     let keyCode = event.keyCode;
@@ -97,19 +99,21 @@ function touchStartHandler(event) {
 	let x=event.touches[0].pageX;
 	let y=event.touches[0].pageY;
 	mouse.startPos={x:x, y:y};
-	console.log("touchstart"+JSON.stringify(mouse))
 }
 function touchMoveHandler(event) {
-	if(mouse.pressed===false) throw new Error("mouse pressed === false, when touchmove event triggered");
-	let x=event.touches[0].pageX;
-	let y=event.touches[0].pageY;
-	mouse.pos={x:x, y:y};
-	console.log("touchmove"+JSON.stringify(mouse));
+    if(mouse.pressed===false) throw new Error("mouse pressed === false, when touchmove event triggered");
+    if(mouse.pos!==null)
+        disableAction(getActionForMouse());
+    let x=event.touches[0].pageX;
+    let y=event.touches[0].pageY;
+    mouse.pos={x:x, y:y};
     enableAction(getActionForMouse());
 }
 function touchEndHandler(event) {
-	mouse.pressed=false;
-	console.log("touchend"+JSON.stringify(mouse))
+    disableAction(getActionForMouse());
+    mouse.startPos=null;
+    mouse.pos=null;
+    mouse.pressed=false;
 }
 // score
 let score;
@@ -122,7 +126,7 @@ let fallingPiece;
 
 
 function gameover() {
-    let url = "/games/scores?game="+name;
+    let url = "/games/scores?game="+gameName;
     post(url, {new_score: score});
     // alert("GAME OVER\nscore:"+score);
     stopMainLoop = true;
@@ -135,27 +139,27 @@ function updateGame() {
     tics++;
 
     let dx=0, dy=0;
-    for (let keyCode in actionCooldown) {
-        if(actionCooldown[keyCode] === 0){
-            if(keyCode == inputKeys.LEFT) {
-                //actionCooldown[keyCode] = 2;
+    for (let action in actionCooldown) {
+        if(actionCooldown[action] === 0){
+            if(action === "LEFT") {
+                //actionCooldown[action] = 2;
                 dx+=-movingSpeed;
             }
-            if(keyCode == inputKeys.RIGHT) {
-                //actionCooldown[keyCode] = 2;
+            if(action === "RIGHT") {
+                //actionCooldown[action] = 2;
                 dx+=movingSpeed;
             }
-            if(keyCode == inputKeys.UP) {
-                actionCooldown[keyCode] = -1;// touch up (not pressed)
+            if(action === "UP") {
+                actionCooldown[action] = -1;// touch up (not pressed)
                 fallingPiece.rotate();
                 if(fallingPiece.collide(squares))
                     fallingPiece.rotateBack();
             }
-            if(keyCode == inputKeys.DOWN) {
+            if(action === "DOWN") {
                 dy+=speedBoost;
             }
-        }else if(actionCooldown[keyCode] > 0){
-            actionCooldown[keyCode]--;
+        }else if(actionCooldown[action] > 0){
+            actionCooldown[action]--;
         }
     }
     dy+=1;//going done naturally
