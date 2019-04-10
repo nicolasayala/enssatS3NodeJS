@@ -27,8 +27,9 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        expires: 6000000
-    }
+        expires: 20*60*1000 
+    },
+    rolling:true
 }));
 
 // Routes setup
