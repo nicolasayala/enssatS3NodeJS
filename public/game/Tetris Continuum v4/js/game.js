@@ -26,7 +26,7 @@ var gameName = "Tetris Continuum v4";
 ///////////////////////////////////
 let speedBoost=9;
 let movingSpeed=4;
-//keyCooldown[keyCode] = 2;
+//actionCooldown[keyCode] = 2;
 
 let nextFallingPieces=[];
 
@@ -37,40 +37,60 @@ let mouse={
 	pressed:false,
 };
 
-//Keys
-let inputKeys = {
-    LEFT:   37,
-    UP:     38,
-    RIGHT:  39,
-    DOWN:   40,
-    SPACE:  32,
-    ENTER:  13
+let keyToAction = {
+    37:"LEFT",
+    38:"UP",
+    39:"RIGHT",
+    40:"DOWN",
 };
 
-function doAction(action){
-	if(keyCooldown[keyCode]<0){
-		keyCooldown[keyCode] = 0;
-	}
+function enableAction(action){
+    if(actionCooldown[action]!==undefined)
+        if(actionCooldown[action]<0){
+            actionCooldown[action] = 0;
+        }
+}
+function disableAction(action){
+    if(actionCooldown[action]!==undefined)
+        actionCooldown[action] = -1;//TODO correction ability to spam (bypass cooldown)
 }
 
-let keyCooldown = {};
-for(let key in inputKeys)
-    keyCooldown[inputKeys[key]]=-1;
+function getActionForMouse(){
+    if(mouse.startPos===null || mouse.pos ===null) throw new Error("startPos or pos null");
+    let dx = mouse.pos.x - mouse.startPos.x;
+    let dy = mouse.pos.y - mouse.startPos.y;
+    if(dx + dy < 2) return null; //threshold for detecting movement
+    if(dx*dx>dy*dy){ //horizontal movement (square for absolute value)
+        if(dx>0) return "RIGHT";
+        else return "LEFT";
+    }else{ //vertical movement
+        if(dy>0) return "UP";
+        else return "DOWN";
+    }
+}
+
+/**
+ * Number :
+ *   -1 action disable
+ *   0 action enable
+ *   >0 action postpone
+ * @type {{ACTION:Number}}
+ */
+let actionCooldown = {};
+for(let key in keyToAction)
+    actionCooldown[actionCooldown[key]]=-1;
+
 function keyDownHandler(event) {
     let keyCode = event.keyCode;
-    for (let action in inputKeys) {
-        if (inputKeys[action] === keyCode) {
-			doAction(action);
-        }
-    }
+    let action = keyToAction[keyCode];
+    if(action!==undefined)
+        enableAction(action);
 }
 function keyUpHandler(event) {
     let keyCode = event.keyCode;
-    for (let key in inputKeys){
-        if (inputKeys[key] === keyCode) {
-            keyCooldown[keyCode] = -1;
-        }
-    }
+    let action = keyToAction[keyCode];
+    if(action!==undefined)
+        disableAction(action);
 }
 function touchStartHandler(event) {
 	mouse.pressed=true;
@@ -84,7 +104,8 @@ function touchMoveHandler(event) {
 	let x=event.touches[0].pageX;
 	let y=event.touches[0].pageY;
 	mouse.pos={x:x, y:y};
-	console.log("touchmove"+JSON.stringify(mouse))
+	console.log("touchmove"+JSON.stringify(mouse));
+    enableAction(getActionForMouse());
 }
 function touchEndHandler(event) {
 	mouse.pressed=false;
@@ -114,18 +135,18 @@ function updateGame() {
     tics++;
 
     let dx=0, dy=0;
-    for (let keyCode in keyCooldown) {
-        if(keyCooldown[keyCode] === 0){
+    for (let keyCode in actionCooldown) {
+        if(actionCooldown[keyCode] === 0){
             if(keyCode == inputKeys.LEFT) {
-                //keyCooldown[keyCode] = 2;
+                //actionCooldown[keyCode] = 2;
                 dx+=-movingSpeed;
             }
             if(keyCode == inputKeys.RIGHT) {
-                //keyCooldown[keyCode] = 2;
+                //actionCooldown[keyCode] = 2;
                 dx+=movingSpeed;
             }
             if(keyCode == inputKeys.UP) {
-                keyCooldown[keyCode] = -1;// touch up (not pressed)
+                actionCooldown[keyCode] = -1;// touch up (not pressed)
                 fallingPiece.rotate();
                 if(fallingPiece.collide(squares))
                     fallingPiece.rotateBack();
@@ -133,8 +154,8 @@ function updateGame() {
             if(keyCode == inputKeys.DOWN) {
                 dy+=speedBoost;
             }
-        }else if(keyCooldown[keyCode] > 0){
-            keyCooldown[keyCode]--;
+        }else if(actionCooldown[keyCode] > 0){
+            actionCooldown[keyCode]--;
         }
     }
     dy+=1;//going done naturally
