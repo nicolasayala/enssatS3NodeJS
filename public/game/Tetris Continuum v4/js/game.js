@@ -45,14 +45,14 @@ let keyToAction = {
 };
 
 function enableAction(action){
-    console.log("enable action "+action);
+    //console.log("enable action "+action);
     if(actionCooldown[action]!==undefined)
         if(actionCooldown[action]<0){
             actionCooldown[action] = 0;
         }
 }
 function disableAction(action){
-    console.log("disable action "+action);
+    //console.log("disable action "+action);
     if(actionCooldown[action]!==undefined)
         actionCooldown[action] = -1;//TODO correction ability to spam (bypass cooldown)
 }

@@ -29,10 +29,10 @@ router.get('/', sessionChecker.filterLoggedOut, (req, res) => {
                     }
                     let personalHighscores = {};
                     for (let hs of user.highscores) {
-												if(hs.game === null)
-														hs.remove();//TODO when deleting a game, delete all highscore. Once done emit an error here 
-												else
-														personalHighscores[hs.game.name] = hs.value;
+                        if(hs.game === null)
+                            hs.remove();//TODO when deleting a game, delete all highscore. Once done emit an error here 
+                        else
+                            personalHighscores[hs.game.name] = hs.value;
                     }
                     res.render('games',
                         {title: 'Listing games', games: games, admin: req.session.user.isAdmin, personalHighscores});
@@ -116,7 +116,6 @@ function update_highscore(game, user, new_score, callback) {
     console.log("highscore", game.highscore);
     if (game.highscore < new_score) {
         game.highscore = new_score;
-        game.save();
     }
     Highscore.findOne({game: game._id, user: user._id})
         .then((hs) => {
@@ -129,7 +128,8 @@ function update_highscore(game, user, new_score, callback) {
                 game.highscores.push(hs._id);
                 game.save();
                 console.log("should have new score ", hs._id);
-            }
+            }else if(game.highscore===new_score)
+                game.save();
             if (hs.value < parseInt(new_score)) {
                 hs.value = parseInt(new_score);
                 console.log("new highscore ", new_score, user.email);
