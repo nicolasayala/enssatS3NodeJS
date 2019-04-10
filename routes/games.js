@@ -29,7 +29,10 @@ router.get('/', sessionChecker.filterLoggedOut, (req, res) => {
                     }
                     let personalHighscores = {};
                     for (let hs of user.highscores) {
-                        personalHighscores[hs.game.name] = hs.value;
+												if(hs.game === null)
+														hs.remove();//TODO when deleting a game, delete all highscore. Once done emit an error here 
+												else
+														personalHighscores[hs.game.name] = hs.value;
                     }
                     res.render('games',
                         {title: 'Listing games', games: games, admin: req.session.user.isAdmin, personalHighscores});

@@ -20,6 +20,8 @@ const GameHeight = 500;
 let divArena;
 let ctxArena;
 var stopMainLoop = false;
+var gameName = "Tetris Continuum v4";
+
 
 ///////////////////////////////////
 let speedBoost=9;
@@ -27,6 +29,13 @@ let movingSpeed=4;
 //keyCooldown[keyCode] = 2;
 
 let nextFallingPieces=[];
+
+//mouse and touch
+let mouse={
+	startPos:null,
+	pos:null,
+	pressed:false,
+};
 
 //Keys
 let inputKeys = {
@@ -38,30 +47,48 @@ let inputKeys = {
     ENTER:  13
 };
 
+function doAction(action){
+	if(keyCooldown[keyCode]<0){
+		keyCooldown[keyCode] = 0;
+	}
+}
+
 let keyCooldown = {};
 for(let key in inputKeys)
     keyCooldown[inputKeys[key]]=-1;
 function keyDownHandler(event) {
-    "use strict";
     let keyCode = event.keyCode;
-    for (let key in inputKeys) {
-        if (inputKeys[key] === keyCode) {
-            if(keyCooldown[keyCode]<0){
-                keyCooldown[keyCode] = 0;
-            }
-            event.preventDefault();
+    for (let action in inputKeys) {
+        if (inputKeys[action] === keyCode) {
+			doAction(action);
         }
     }
 }
 function keyUpHandler(event) {
-    "use strict";
     let keyCode = event.keyCode;
     for (let key in inputKeys){
         if (inputKeys[key] === keyCode) {
             keyCooldown[keyCode] = -1;
         }
     }
-
+}
+function touchStartHandler(event) {
+	mouse.pressed=true;
+	let x=event.touches[0].pageX;
+	let y=event.touches[0].pageY;
+	mouse.startPos={x:x, y:y};
+	console.log("touchstart"+JSON.stringify(mouse))
+}
+function touchMoveHandler(event) {
+	if(mouse.pressed===false) throw new Error("mouse pressed === false, when touchmove event triggered");
+	let x=event.touches[0].pageX;
+	let y=event.touches[0].pageY;
+	mouse.pos={x:x, y:y};
+	console.log("touchmove"+JSON.stringify(mouse))
+}
+function touchEndHandler(event) {
+	mouse.pressed=false;
+	console.log("touchend"+JSON.stringify(mouse))
 }
 // score
 let score;
@@ -74,7 +101,7 @@ let fallingPiece;
 
 
 function gameover() {
-    let url = "/games/scores?game=Tetris Continuum v3";
+    let url = "/games/scores?game="+name;
     post(url, {new_score: score});
     // alert("GAME OVER\nscore:"+score);
     stopMainLoop = true;
@@ -193,8 +220,8 @@ function init() {
     divArena = document.getElementById("arena");
     ctxArena = document.createElement("canvas");
     ctxArena.setAttribute("id", "canArena");
-    ctxArena.setAttribute("height", CanHeight);
-    ctxArena.setAttribute("width", CanWidth);
+    ctxArena.setAttribute("height", window.innerHeight);
+    ctxArena.setAttribute("width", window.innerWidth);
     divArena.appendChild(ctxArena);
     ctxArena = ctxArena.getContext("2d");
     ctxArena.fillStyle = "rgb(200,0,0)";
@@ -213,6 +240,9 @@ function init() {
 
     window.addEventListener("keydown", keyDownHandler, false);
     window.addEventListener("keyup", keyUpHandler, false);
+    window.addEventListener("touchstart", touchStartHandler, false);
+    window.addEventListener("touchmove", touchMoveHandler, false);
+    window.addEventListener("touchend", touchEndHandler, false);
 
     animFrame( recursiveAnim );
 
